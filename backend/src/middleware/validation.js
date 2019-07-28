@@ -1,6 +1,4 @@
-import {
-  createUserSchema,
-} from './schemas';
+import createUserSchema from './schemas';
 
 const validateSignup = (request, response, next) => {
   try {

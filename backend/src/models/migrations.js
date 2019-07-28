@@ -1,14 +1,27 @@
 import pool from './database';
 
+/**
+ * Drop Tables
+ */
+const dropTables = () => {
+  pool.query('DROP TABLE IF EXISTS users')
+    .then(() => {
+      console.log('Table dropped');
+    });
+};
 
+/**
+ * Create Tables
+ */
 const createTables = () => {
-  const users = `CREATE TABLE IF NOT EXITS
+  const users = `CREATE TABLE IF NOT EXISTS
     users (
-        id SERIAL PRIMARY KEY;
-        firstName VARCHAR(100) UNIQUE NOT NULL,
-        lastName VARCHAR(100) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(100) UNIQUE NOT NULL  
+        id SERIAL PRIMARY KEY,      
+        email VARCHAR(128) UNIQUE NOT NULL,
+        firstName VARCHAR(128) NOT NULL,
+        lastName VARCHAR(128) NOT NULL,
+        password VARCHAR(128) NOT NULL,
+        registered TIMESTAMP,
     )`;
   pool.query(users)
     .then((res) => {
@@ -16,11 +29,14 @@ const createTables = () => {
       pool.end();
     })
     .catch((error) => {
-      console.log(error);
+      console.log('Tables can not be  created');
       pool.end();
     });
 };
 
-module.export = {
+module.exports = {
+  dropTables,
   createTables,
 };
+
+require('make-runnable');
