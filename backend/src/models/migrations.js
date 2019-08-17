@@ -1,5 +1,6 @@
 import pool from './database';
 
+
 /**
  * Drop Tables
  */
@@ -21,15 +22,16 @@ const createTables = () => {
         firstName VARCHAR(128) NOT NULL,
         lastName VARCHAR(128) NOT NULL,
         password VARCHAR(128) NOT NULL,
-        registered TIMESTAMP,
+        registered TIMESTAMP WITH TIME ZONE
     )`;
   pool.query(users)
     .then((res) => {
       console.log(res);
+      console.log('Tables as been created');
       pool.end();
     })
     .catch((error) => {
-      console.log('Tables can not be  created');
+      console.log('Tables can not be created');
       pool.end();
     });
 };

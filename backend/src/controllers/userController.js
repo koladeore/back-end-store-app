@@ -1,7 +1,7 @@
 import moment from 'moment';
 import pool from '../models/database';
 import utils from '../helper/utils';
-import { signupUser } from '../models/queries';
+import { signupUser, signinUser } from '../models/queries';
 
 class UserController {
   /**
@@ -39,7 +39,6 @@ class UserController {
         type: userType,
         isAdmin: adminType,
       };
-
       pool.connect((err, client, done) => {
         client.query(signupUser(data), (error, result) => {
           done();
@@ -50,10 +49,10 @@ class UserController {
                 error: 'Email already exists',
               });
             }
+            return response.status(400).json({ status: 500, error: error.message });
           }
 
           const user = result.rows[0];
-          console.log(result);
           const tokenData = {
             id: user.id,
             firstName: user.firstname,
@@ -77,6 +76,48 @@ class UserController {
               email: user.email,
             }],
           });
+        });
+      });
+    } catch (e) {
+      return response.status(500).json({ status: 500, error: 'Server Error' });
+    }
+  }
+
+  static signin(request, response) {
+    try {
+      const { email, password } = request.body;
+
+      pool.connect((err, client, done) => {
+        client.query(signinUser(email), (error, result) => {
+          done();
+          const user = result.rows[0];
+          if (!user) {
+            return response.status(401).json({ status: 401, error: 'Invalid login details, email or password is wrong' });
+          }
+          if (utils.validatePassword(password, user.password)) {
+            const tokenData = {
+              id: user.id,
+              email: user.email,
+              type: user.type,
+              isAdmin: user.isadmin,
+            };
+            const token = utils.jwtToken(tokenData);
+
+            const {
+              firstname, lastname, email, id,
+            } = user;
+
+            return response.status(200).json({
+              status: 201,
+              data: [{
+                token,
+                id,
+                firstName: firstname,
+                lastName: lastname,
+                email,
+              }],
+            });
+          }
         });
       });
     } catch (e) {

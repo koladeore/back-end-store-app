@@ -1,13 +1,15 @@
 import dotenv from 'dotenv';
+import express from 'express';
 import userController from '../controllers/userController';
-import validateSignup from '../middleware/validation';
+import Validations from '../middleware/validation';
 
 dotenv.config();
 
-const API_VERSION = '/api/v1';
+const userRouter = express.Router();
+const { validateSignin, validateSignup } = Validations;
+const { signup, signin } = userController;
 
-const userRoute = (app) => {
-  app.post(`${API_VERSION}/auth/signup`, validateSignup, userController.signup);
-};
+userRouter.post('/signup', validateSignup, signup);
+userRouter.post('/signin', validateSignin, signin);
 
-export default userRoute;
+export default userRouter;

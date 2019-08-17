@@ -13,7 +13,11 @@ const signupUser = data => ({
   ) VALUES ($1, $2, $3, $4) RETURNING *`,
   values: [data.firstName, data.lastName, data.email, data.password],
 });
-
+const signinUser = email => ({
+  text: 'SELECT * FROM users WHERE email = $1',
+  values: [email],
+});
 module.exports = {
   signupUser,
+  signinUser,
 };
