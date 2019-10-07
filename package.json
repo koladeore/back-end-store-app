@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node backend/index.js",
+    "test": "nyc mocha --require @babel/register ./tests/*.js --timeout 10000 --exit",
     "dropTable": "babel-node backend/src/models/migrations dropTables",
     "createTable": "babel-node backend/src/models/migrations createTables"
   },
@@ -14,6 +15,7 @@
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@babel/register": "7.6.2",
     "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -29,13 +31,17 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "chai": "4.2.0",
+    "chai-http": "4.3.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-config-node": "^4.0.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-prettier": "^3.1.0",
+    "mocha": "6.2.1",
     "nodemon": "^1.19.1",
+    "nyc": "14.1.1",
     "prettier": "^1.18.2"
   },
   "repository": {
